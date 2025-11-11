@@ -481,38 +481,11 @@ python -m pytest --cov=components tests/
 
 ---
 
-## 🤝 기여 및 개발
-
-### 🔧 개발 환경 설정
-
-```bash
-# 개발 의존성 설치
-pip install -r requirements-dev.txt
-
-# 코드 품질 검사
-black app/ components/  # 코드 포맷팅
-flake8 app/ components/  # 린팅
-mypy app/ components/   # 타입 체크
-```
-
-### 📋 기여 가이드라인
-
-1. **이슈 리포팅**: GitHub Issues에 버그 또는 기능 요청
-2. **코드 스타일**: Black 포맷터 사용
-3. **테스트**: 새 기능에 대한 테스트 코드 작성
-4. **문서화**: 코드 변경 시 README 업데이트
-
----
 
 ## 🎉 즐거운 대화하세요!
 
 > 🌟 **팁**: 자연스럽게 대화하세요! AI가 당신의 감정과 성격을 이해하고 그에 맞는 응답을 생성합니다.
 
-### 📞 지원 및 피드백
-
-- 🐛 **버그 리포트**: [GitHub Issues](https://github.com/your-repo/issues)
-- 💡 **기능 제안**: [Feature Requests](https://github.com/your-repo/discussions)
-- 📧 **직접 문의**: your-email@domain.com
 
 ### 📜 라이선스
 
@@ -526,7 +499,6 @@ MIT License - 자유롭게 사용하고 수정하세요!
 
 ### 👨‍💼 프로젝트 관리자 연락처
 
-**Name**: 임현근 (Hyun-Keun Lim)  
 **Email**: [hyun.lim@okkorea.net](mailto:hyun.lim@okkorea.net)  
 **Homepage**: [https://www.okkorea.net](https://www.okkorea.net)
 
