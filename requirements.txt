@@ -1,0 +1,18 @@
+
+# Core dependencies
+streamlit
+speechrecognition
+gtts
+pygame
+python-dotenv
+pyngrok
+ollama
+transformers
+torch
+sounddevice
+numpy
+scipy
+
+# Optional dependencies
+elevenlabs
+pyaudio

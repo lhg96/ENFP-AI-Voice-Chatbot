@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENFP AI 음성 챗봇</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .conversation-box {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .user-message {
+            color: #FFC107;
+            font-weight: bold;
+        }
+        .ai-message {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .system-message {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .guidance-box {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+        }
+        .main-content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h4>컨트롤 패널</h4>
+        <p>대화 상태를 관리하고 MBTI를 분석하세요.</p>
+        <p><strong>Public URL:</strong> <a href="{{ public_url }}" target="_blank">{{ public_url }}</a></p>
+    </div>
+    <div class="main-content">
+        <h1 class="text-center mb-4">🌟 ENFP AI 음성 챗봇 🌟</h1>
+        <p class="text-center">마이크 버튼을 눌러 대화를 시작하세요. '종료'라고 말하면 대화가 끝납니다.</p>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <h3>💬 대화 기록</h3>
+                <div id="conversation" class="border p-3" style="height: 400px; overflow-y: auto;">
+                    {% for item in conversation %}
+                        <div class="conversation-box {% if item.sender == 'User' %}user-message{% elif item.sender == 'AI' %}ai-message{% else %}system-message{% endif %}">
+                            {{ item.sender }}: {{ item.message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h3>📝 대화 가이드</h3>
+                <div id="guidance" class="border p-3" style="height: 400px; overflow-y: auto;">
+                    {% for tip in guidance %}
+                        <div class="guidance-box">{{ tip }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <button id="start-listening" class="btn btn-success w-100" {% if paused %}disabled{% endif %}>🎙️ 듣기 시작</button>
+            </div>
+            <div class="col-md-4">
+                <button id="toggle-pause" class="btn btn-warning w-100">{{ '⏸️ 일시정지' if not paused else '▶️ 재개' }}</button>
+            </div>
+            <div class="col-md-4">
+                <button id="analyze-mbti" class="btn btn-info w-100">🔍 MBTI 분석</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#start-listening').click(function() {
+                $.post('/process_audio', function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        updateConversation(data.conversation);
+                        updateGuidance(data.guidance);
+                    }
+                });
+            });
+
+            $('#toggle-pause').click(function() {
+                $.post('/toggle_pause', function(data) {
+                    $('#start-listening').prop('disabled', data.paused);
+                    $('#toggle-pause').text(data.paused ? '▶️ 재개' : '⏸️ 일시정지');
+                });
+            });
+
+            $('#analyze-mbti').click(function() {
+                $.post('/analyze_mbti', function(data) {
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        updateConversation(data.conversation);
+                        updateGuidance(data.guidance);
+                    }
+                });
+            });
+
+            function updateConversation(conversation) {
+                $('#conversation').empty();
+                conversation.forEach(function(item) {
+                    let className = item.sender === 'User' ? 'user-message' : item.sender === 'AI' ? 'ai-message' : 'system-message';
+                    $('#conversation').append(
+                        `<div class="conversation-box ${className}">${item.sender}: ${item.message}</div>`
+                    );
+                });
+                $('#conversation').scrollTop($('#conversation')[0].scrollHeight);
+            }
+
+            function updateGuidance(guidance) {
+                $('#guidance').empty();
+                guidance.forEach(function(tip) {
+                    $('#guidance').append(
+                        `<div class="guidance-box">${tip}</div>`
+                    );
+                });
+                $('#guidance').scrollTop($('#guidance')[0].scrollHeight);
+            }
+        });
+    </script>
+</body>
+</html>
